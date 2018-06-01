@@ -260,7 +260,7 @@ class NivelOne():
         self.win = win
         self.arrayComponente = []
         self.bg = Component(win, pg.image.load(
-            "../assets/f.jpg").convert(), None, 0, 0, 0)
+            "../assets/f.jpg"), None, 0, 0, 0)
 
         self.bgWidth, self.bgHeight = self.bg.currentImage.get_rect().size
         self.stageWidth = self.bgWidth * 2
@@ -269,14 +269,16 @@ class NivelOne():
 
         # CONJUNTO DE IMAGENES
         self.all_sprites = pg.sprite.Group()
+        self.platforms = pg.sprite.Group()
         self.player = Player(self)
+        p1 = Platform(0, FLOOR , WIDTH, WIDTH - FLOOR)
         self.all_sprites.add(self.player)
-        ######################################
-
-        self.__loadComponents(win)
+        self.platforms.add(p1)
+        
 
     def draw(self):
         self.all_sprites.draw(self.win)
+        self.platforms.draw(self.win)
 
     def events(self):
         #mouse = pg.mouse.get_pos()
@@ -287,6 +289,10 @@ class NivelOne():
 
     def update(self):
         self.win.blit(self.bg.currentImage, (0, 0))
+        hits = pg.sprite.spritecollide(self.player , self.platforms , False)
+        if hits:
+            self.player.pos.y = hits[0].rect.top + 1
+            self.player.vel.y = 0
 
         self.all_sprites.update()
 
@@ -296,5 +302,4 @@ class NivelOne():
         else:
             print("Move stage ->")
 
-    def __loadComponents(self, win):
-        pass
+    
