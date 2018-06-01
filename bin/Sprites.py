@@ -21,6 +21,8 @@ class Player(pg.sprite.Sprite):
             self.acc.x = PLAYER_ACC
         elif k[pg.K_LEFT]:
             self.acc.x = -PLAYER_ACC
+        #RESTRINGIR EL MOVIMIENTO DE JUGADOR 
+        #SI PASA EL INICIO O FIN DEL STAGE
 
         self.acc += self.vel * PLAYER_FRIC
         self.vel += self.acc

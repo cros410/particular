@@ -39,7 +39,7 @@ class Component():
         pass
 
     def inside(self,pos_x,pos_y):
-        if((self.x + 165) > pos_x > self.x and (self.y + 75) > pos_y > self.y):
+        if((self.x + 132) > pos_x > self.x and (self.y + 60) > pos_y > self.y):
             return True
         return False
     

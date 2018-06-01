@@ -1,5 +1,4 @@
 import sys
-
 import pygame as pg
 from Component import Component
 from config import *
@@ -14,12 +13,12 @@ class MenuStage():
         self.game = game
         self.win = win
         self.arrayComponente = []
-        self.play = Component(win, pg.image.load("../assets/menu/btn_play.png"),
-                              pg.image.load("../assets/menu/btn_alt_play.png"), 518, 450, 1)
-        self.options = Component(win, pg.image.load("../assets/menu/btn_options.png"),
-                                 pg.image.load("../assets/menu/btn_alt_options.png"), 518, 550, 1)
-        self.exit = Component(win, pg.image.load("../assets/menu/btn_exit.png"),
-                              pg.image.load("../assets/menu/btn_alt_exit.png"), 518, 650, 1)
+        self.play = Component(win, pg.image.load("../assets/menu/t/btn_play.png"),
+                              pg.image.load("../assets/menu/t/btn_alt_play.png"), 414, 360, 1)
+        self.options = Component(win, pg.image.load("../assets/menu/t/btn_options.png"),
+                                 pg.image.load("../assets/menu/t/btn_alt_options.png"), 414, 440, 1)
+        self.exit = Component(win, pg.image.load("../assets/menu/t/btn_exit.png"),
+                              pg.image.load("../assets/menu/t/btn_alt_exit.png"), 414, 520, 1)
         self.__loadComponents(win)
 
     def draw(self):
@@ -60,7 +59,7 @@ class MenuStage():
         self.arrayComponente.append(
             Component(win, pg.image.load("../assets/menu/bg.jpg"), None, 0, 0, 0))
         self.arrayComponente.append(Component(win, pg.image.load(
-            "../assets/menu/logo.png"), None, 300, 50, 0))
+            "../assets/menu/t/logo.png"), None, 240, 40, 0))
         self.arrayComponente.append(self.play)
         self.arrayComponente.append(self.options)
         self.arrayComponente.append(self.exit)
@@ -262,68 +261,33 @@ class NivelOne():
         self.arrayComponente = []
         self.bg = Component(win, pg.image.load(
             "../assets/mountain.png").convert(), None, 0, 0, 0)
-        
-        #CONJUNTO DE IMAGENES
+
+        # CONJUNTO DE IMAGENES
         self.all_sprites = pg.sprite.Group()
         self.player = Player()
         self.all_sprites.add(self.player)
         ######################################
-        
+
         self.bgWidth, self.bgHeight = self.bg.currentImage.get_rect().size
         self.stageWidth = self.bgWidth * 2
         self.stagePosX = 0
         self.startScrollingPosX = HW
-        self.circleRadius = 25
-        self.circlePosX = self.circleRadius
-        self.playerPosX = self.circleRadius
-        self.playerPosY = 585
-        self.playerVelocityX = 0
+
         self.__loadComponents(win)
 
     def draw(self):
         self.all_sprites.draw(self.win)
-        # pg.draw.circle(self.win, BLACK, (int(self.circlePosX),
-        #                                  int(self.playerPosY) - 25), self.circleRadius, 0)
 
     def events(self):
-        mouse = pg.mouse.get_pos()
+        #mouse = pg.mouse.get_pos()
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
-    
+
     def update(self):
-        
-        #k = pg.key.get_pressed()
-        # if k[pg.K_RIGHT]:
-        #     self.playerVelocityX = 1
-        # elif k[pg.K_LEFT]:
-        #     self.playerVelocityX = -1
-        # else:
-        #     self.playerVelocityX = 0
-        # self.playerPosX += self.playerVelocityX
-        # #Si el player ah llegado al final
-        # if self.playerPosX > self.stageWidth - self.circleRadius:
-        #     self.playerPosX = self.stageWidth - self.circleRadius
-        # #Si el jugador esta al inicio de la pantalla
-        # if self.playerPosX < self.circleRadius:
-        #     self.playerPosX = self.circleRadius
-
-        # if self.playerPosX < self.startScrollingPosX:
-        #     self.circlePosX = self.playerPosX
-        # elif self.playerPosX > self.stageWidth - self.startScrollingPosX:
-        #     self.circlePosX = self.playerPosX - self.stageWidth + WIDTH
-        # else:
-        #     self.circlePosX = self.startScrollingPosX
-        #     self.stagePosX += -self.playerVelocityX
-
-        # rel_x = self.stagePosX % self.bgWidth
-        # self.win.blit(self.bg.currentImage, (rel_x - self.bgWidth, 0))
-        # if rel_x < WIDTH:
-        #     self.win.blit(self.bg.currentImage, (rel_x, 0))
         self.win.blit(self.bg.currentImage, (0, 0))
         self.all_sprites.update()
 
     def __loadComponents(self, win):
-        # self.arrayComponente.append(self.bg)
         pass

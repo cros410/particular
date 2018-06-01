@@ -1,6 +1,6 @@
 TITLE = "Inka challenge"
-WIDTH  = 1200
-HEIGHT = 800
+WIDTH  = 960
+HEIGHT = 640
 HW, HH = WIDTH / 2, HEIGHT / 2
 FPS = 500
 BLACK = (255,0,0)
