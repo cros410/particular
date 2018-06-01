@@ -270,10 +270,15 @@ class NivelOne():
         # CONJUNTO DE IMAGENES
         self.all_sprites = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
+        #ADD PLAYER
         self.player = Player(self)
-        p1 = Platform(0, FLOOR , WIDTH, WIDTH - FLOOR)
         self.all_sprites.add(self.player)
+        #ADD PLATFORMS
+        p1 = Platform(0, FLOOR , WIDTH, HEIGHT - FLOOR)
+        p2 = Platform(0, FLOOR-100 , 100, HEIGHT - FLOOR)
+        self.platforms.add(p2)
         self.platforms.add(p1)
+        
         
 
     def draw(self):
