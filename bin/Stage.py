@@ -13,12 +13,12 @@ class MenuStage():
         self.game = game
         self.win = win
         self.arrayComponente = []
-        self.play = Component(win, pg.image.load("../assets/menu/t/btn_play.png"),
-                              pg.image.load("../assets/menu/t/btn_alt_play.png"), 414, 360, 1)
-        self.options = Component(win, pg.image.load("../assets/menu/t/btn_options.png"),
-                                 pg.image.load("../assets/menu/t/btn_alt_options.png"), 414, 440, 1)
-        self.exit = Component(win, pg.image.load("../assets/menu/t/btn_exit.png"),
-                              pg.image.load("../assets/menu/t/btn_alt_exit.png"), 414, 520, 1)
+        self.play = Component(win, pg.image.load("../assets/menu/btn_play.png"),
+                              pg.image.load("../assets/menu/btn_alt_play.png"), 414, 360, 1)
+        self.options = Component(win, pg.image.load("../assets/menu/btn_options.png"),
+                                 pg.image.load("../assets/menu/btn_alt_options.png"), 414, 440, 1)
+        self.exit = Component(win, pg.image.load("../assets/menu/btn_exit.png"),
+                              pg.image.load("../assets/menu/btn_alt_exit.png"), 414, 520, 1)
         self.__loadComponents(win)
 
     def draw(self):
@@ -59,7 +59,7 @@ class MenuStage():
         self.arrayComponente.append(
             Component(win, pg.image.load("../assets/menu/bg.jpg"), None, 0, 0, 0))
         self.arrayComponente.append(Component(win, pg.image.load(
-            "../assets/menu/t/logo.png"), None, 240, 40, 0))
+            "../assets/menu/logo.png"), None, 240, 40, 0))
         self.arrayComponente.append(self.play)
         self.arrayComponente.append(self.options)
         self.arrayComponente.append(self.exit)
