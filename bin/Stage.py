@@ -75,26 +75,26 @@ class OptionStage():
         self.arraySuit = []
         self.arrayDifficulty = []
         self.suit_a = Component(win, pg.image.load("../assets/options/suit_a.png"),
-                                pg.image.load("../assets/options/suit_a_press.png"), 400, 151, 1)
+                                pg.image.load("../assets/options/suit_a_press.png"), 320, 122, 1)
         self.suit_b = Component(win, pg.image.load("../assets/options/suit_b.png"),
-                                pg.image.load("../assets/options/suit_b_press.png"), 550, 151, 1)
+                                pg.image.load("../assets/options/suit_b_press.png"), 440, 122, 1)
         self.suit_c = Component(win, pg.image.load("../assets/options/suit_c.png"),
-                                pg.image.load("../assets/options/suit_c_press.png"), 700, 151, 1)
+                                pg.image.load("../assets/options/suit_c_press.png"), 560, 122, 1)
         self.difficulty_1 = Component(win, pg.image.load("../assets/options/level_1.png"),
-                                      pg.image.load("../assets/options/level_1_press.png"), 400, 402, 1)
+                                      pg.image.load("../assets/options/level_1_press.png"), 320, 321, 1)
         self.difficulty_2 = Component(win, pg.image.load("../assets/options/level_2.png"),
-                                      pg.image.load("../assets/options/level_2_press.png"), 550, 402, 1)
+                                      pg.image.load("../assets/options/level_2_press.png"), 440, 321, 1)
         self.difficulty_3 = Component(win, pg.image.load("../assets/options/level_3.png"),
-                                      pg.image.load("../assets/options/level_3_press.png"), 700, 402, 1)
+                                      pg.image.load("../assets/options/level_3_press.png"), 560, 321, 1)
         self.music = Component(win, pg.image.load("../assets/options/music_on.png"),
-                               pg.image.load("../assets/options/music_off.png"), 475, 653, 1)
+                               pg.image.load("../assets/options/music_off.png"), 380, 522, 1)
         self.sound = Component(win, pg.image.load("../assets/options/sound_on.png"),
-                               pg.image.load("../assets/options/sound_off.png"), 625, 653, 1)
+                               pg.image.load("../assets/options/sound_off.png"), 500, 522, 1)
         self.back = Component(win, pg.image.load(
-            "../assets/options/back.png"), None, 25, 25, 0)
+            "../assets/options/back.png"), None, 20, 20, 0)
 
         self.creditos = Component(win, pg.image.load(
-            "../assets/options/creditos.png"), None, 1075, 675, 0)
+            "../assets/options/creditos.png"), None, 860, 540, 0)
 
         self.__loadComponents(win)
         self.__init_componets()
@@ -157,19 +157,19 @@ class OptionStage():
         self.arrayComponente.append(
             Component(win, pg.image.load("../assets/options/bg.jpg"), None, 0, 0, 0))
         self.arrayComponente.append(Component(win, pg.image.load(
-            "../assets/options/select_suit.png"), None, 322, 41, 0))
+            "../assets/options/select_suit.png"), None, 258, 33, 0))
         self.arraySuit.append(self.suit_a)
         self.arraySuit.append(self.suit_b)
         self.arraySuit.append(self.suit_c)
         self.arrayComponente = self.arrayComponente + self.arraySuit
         self.arrayComponente.append(Component(win, pg.image.load(
-            "../assets/options/select_level.png"), None, 322, 292, 0))
+            "../assets/options/select_level.png"), None, 257, 233, 0))
         self.arrayDifficulty.append(self.difficulty_1)
         self.arrayDifficulty.append(self.difficulty_2)
         self.arrayDifficulty.append(self.difficulty_3)
         self.arrayComponente = self.arrayComponente + self.arrayDifficulty
         self.arrayComponente.append(Component(win, pg.image.load(
-            "../assets/options/select_sound.png"), None, 431, 543, 0))
+            "../assets/options/select_sound.png"), None, 345, 434, 0))
         self.arrayComponente.append(self.music)
         self.arrayComponente.append(self.sound)
 
@@ -198,7 +198,7 @@ class CreditsStage():
         self.win = win
         self.arrayComponente = []
         self.back = Component(win, pg.image.load(
-            "../assets/options/back.png"), None, 25, 25, 0)
+            "../assets/options/back.png"), None, 20, 20, 0)
         self.__loadComponents()
 
     def draw(self):
@@ -230,27 +230,27 @@ class CreditsStage():
         self.arrayComponente.append(
             Component(self.win, pg.image.load("../assets/options/bg.jpg"), None, 0, 0, 0))
         self.arrayComponente.append(Component(self.win, pg.image.load(
-            "../assets/credits/creditos.png"), None, 322, 50, 0))
+            "../assets/credits/creditos.png"), None, 258, 40, 0))
         self.arrayComponente.append(Component(self.win, pg.image.load(
-            "../assets/credits/jason_foto.png"), None, 182, 181, 0))
+            "../assets/credits/jason_foto.png"), None, 146, 145, 0))
         self.arrayComponente.append(Component(self.win, pg.image.load(
-            "../assets/credits/jason.png"), None, 135, 316, 0))
+            "../assets/credits/jason.png"), None, 108, 253, 0))
         self.arrayComponente.append(Component(self.win, pg.image.load(
-            "../assets/credits/claudia_foto.png"), None, 182, 553, 0))
+            "../assets/credits/claudia_foto.png"), None, 146, 442, 0))
         self.arrayComponente.append(Component(self.win, pg.image.load(
-            "../assets/credits/claudia.png"), None, 135, 688, 0))
+            "../assets/credits/claudia.png"), None, 108, 550, 0))
         self.arrayComponente.append(Component(self.win, pg.image.load(
-            "../assets/credits/carlos_foto.png"), None, 537, 367, 0))
+            "../assets/credits/carlos_foto.png"), None, 430, 294, 0))
         self.arrayComponente.append(Component(self.win, pg.image.load(
-            "../assets/credits/carlos.png"), None, 490, 502, 0))
+            "../assets/credits/carlos.png"), None, 392, 401, 0))
         self.arrayComponente.append(Component(self.win, pg.image.load(
-            "../assets/credits/cristina_foto.png"), None, 892, 181, 0))
+            "../assets/credits/cristina_foto.png"), None, 714, 145, 0))
         self.arrayComponente.append(Component(self.win, pg.image.load(
-            "../assets/credits/cristina.png"), None, 845, 316, 0))
+            "../assets/credits/cristina.png"), None, 676, 253, 0))
         self.arrayComponente.append(Component(self.win, pg.image.load(
-            "../assets/credits/casanova_foto.png"), None, 892, 553, 0))
+            "../assets/credits/casanova_foto.png"), None, 714, 442, 0))
         self.arrayComponente.append(Component(self.win, pg.image.load(
-            "../assets/credits/casanova.png"), None, 845, 688, 0))
+            "../assets/credits/casanova.png"), None, 676, 550, 0))
         self.arrayComponente.append(self.back)
 
 
@@ -260,7 +260,7 @@ class NivelOne():
         self.win = win
         self.arrayComponente = []
         self.bg = Component(win, pg.image.load(
-            "../assets/mountain.png").convert(), None, 0, 0, 0)
+            "../assets/f.jpg").convert(), None, 0, 0, 0)
 
         # CONJUNTO DE IMAGENES
         self.all_sprites = pg.sprite.Group()
