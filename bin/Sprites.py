@@ -40,7 +40,7 @@ class Player(pg.sprite.Sprite):
         # IN THE MIDDLE OF THE SCREEM
         if self.pos.x < (self.stage.startScrollingPosX - WHP):
             self.pos_stage.x = self.pos.x
-        elif self.pos.x > self.stage.stageWidth - (self.stage.startScrollingPosX - WHP):
+        elif self.pos.x > self.stage.stageWidth - (self.stage.startScrollingPosX + WHP):
             self.pos_stage.x = self.pos.x - self.stage.stageWidth + WIDTH
         else:
             self.pos_stage.x = (self.stage.startScrollingPosX - WHP)
