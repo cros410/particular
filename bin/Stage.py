@@ -262,16 +262,16 @@ class NivelOne():
         self.bg = Component(win, pg.image.load(
             "../assets/f.jpg").convert(), None, 0, 0, 0)
 
-        # CONJUNTO DE IMAGENES
-        self.all_sprites = pg.sprite.Group()
-        self.player = Player()
-        self.all_sprites.add(self.player)
-        ######################################
-
         self.bgWidth, self.bgHeight = self.bg.currentImage.get_rect().size
         self.stageWidth = self.bgWidth * 2
-        self.stagePosX = 0
         self.startScrollingPosX = HW
+        self.stagePosX = 0
+
+        # CONJUNTO DE IMAGENES
+        self.all_sprites = pg.sprite.Group()
+        self.player = Player(self)
+        self.all_sprites.add(self.player)
+        ######################################
 
         self.__loadComponents(win)
 
@@ -287,7 +287,14 @@ class NivelOne():
 
     def update(self):
         self.win.blit(self.bg.currentImage, (0, 0))
+
         self.all_sprites.update()
+
+    def moveStage(self, dir):
+        if dir > 0:
+            print("Move stage <-")
+        else:
+            print("Move stage ->")
 
     def __loadComponents(self, win):
         pass
