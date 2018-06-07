@@ -261,45 +261,57 @@ class NivelOne():
         self.arrayComponente = []
         self.bg = Component(win, pg.image.load(
             "../assets/f.jpg"), None, 0, 0, 0)
-
+        self.win.blit(self.bg.currentImage, (0, 0))
         self.bgWidth, self.bgHeight = self.bg.currentImage.get_rect().size
         self.stageWidth = self.bgWidth * 2
         self.startScrollingPosX = HW
         self.stagePosX = 0
 
         # CONJUNTO DE IMAGENES
-        self.all_sprites = pg.sprite.Group()
+        self.players = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
         #ADD PLAYER
         self.player = Player(self)
-        self.all_sprites.add(self.player)
+        self.players.add(self.player)
         #ADD PLATFORMS
         p1 = Platform(0, FLOOR , WIDTH, HEIGHT - FLOOR)
-        p2 = Platform(0, FLOOR-100 , 100, HEIGHT - FLOOR)
-        self.platforms.add(p2)
+        p2 = Platform(100 , FLOOR - 100 , 100 , 20)
         self.platforms.add(p1)
+        self.platforms.add(p2)
         
         
 
     def draw(self):
-        self.all_sprites.draw(self.win)
+        self.players.draw(self.win)
         self.platforms.draw(self.win)
 
     def events(self):
         #mouse = pg.mouse.get_pos()
+        move = 0
+        k = pg.key.get_pressed()
+        if k[pg.K_RIGHT]:
+            move  = 1
+        elif k[pg.K_LEFT]:
+           move = -1
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
+            if event.type == pg.KEYDOWN:
+                if  event.key == pg.K_SPACE:
+                    self.player.jump()
+        self.player.move(move)
+         
 
     def update(self):
-        self.win.blit(self.bg.currentImage, (0, 0))
-        hits = pg.sprite.spritecollide(self.player , self.platforms , False)
-        if hits:
-            self.player.pos.y = hits[0].rect.top + 1
-            self.player.vel.y = 0
+        #CHECK IF PLAYER HIT A PLATFOR 
+        if  self.player.vel.y > 0:
+            hits = pg.sprite.spritecollide(self.player , self.platforms , False)
+            if hits:
+                self.player.pos.y = hits[0].rect.top + 1
+                self.player.vel.y = 0
 
-        self.all_sprites.update()
+        #self.players.update()
 
     def moveStage(self, dir):
         if dir > 0:
