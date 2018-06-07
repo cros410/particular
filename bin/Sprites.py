@@ -27,7 +27,6 @@ class Player(pg.sprite.Sprite):
         # ECU OF MOVE
         self.vel += self.acc
         self.pos += self.vel + 0.5 * self.acc
-        WP = self.image.get_width()
         WHP = self.image.get_width() / 2
         # NO OUT OF STAGE
         if self.pos.x >= self.stage.stageWidth - WHP:
@@ -43,13 +42,17 @@ class Player(pg.sprite.Sprite):
         else:
             self.pos_screen.x = self.stage.startScrollingPosX
             self.stage.stagePosX += -self.vel.x
+
+            for platform in self.stage.platforms[1:]:
+                platform.rect.x += (self.pos.x - self.stage.startScrollingPosX)
+
         # MOVE THE SCREEN
         rel_x = self.stage.stagePosX % self.stage.bgWidth
         self.stage.win.blit(self.stage.bg.currentImage,
                             (rel_x - self.stage.bgWidth, 0))
         if rel_x < WIDTH:
             self.stage.win.blit(self.stage.bg.currentImage, (rel_x, 0))
-
+        
         self.rect.center = (self.pos_screen.x, self.pos.y-WHP)
 
     def jump(self):
@@ -68,3 +71,4 @@ class Platform(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+    

@@ -274,9 +274,9 @@ class NivelOne():
         self.player = Player(self)
         self.players.add(self.player)
         #ADD PLATFORMS
-        p1 = Platform(0, FLOOR , WIDTH, HEIGHT - FLOOR)
+        base = Platform(0, FLOOR , WIDTH, HEIGHT - FLOOR)
         p2 = Platform(100 , FLOOR - 100 , 100 , 20)
-        self.platforms.add(p1)
+        self.platforms.add(base)
         self.platforms.add(p2)
         
         
@@ -306,17 +306,10 @@ class NivelOne():
     def update(self):
         #CHECK IF PLAYER HIT A PLATFOR 
         if  self.player.vel.y > 0:
+            
             hits = pg.sprite.spritecollide(self.player , self.platforms , False)
             if hits:
                 self.player.pos.y = hits[0].rect.top + 1
                 self.player.vel.y = 0
-
-        #self.players.update()
-
-    def moveStage(self, dir):
-        if dir > 0:
-            print("Move stage <-")
-        else:
-            print("Move stage ->")
 
     
