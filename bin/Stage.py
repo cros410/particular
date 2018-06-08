@@ -263,7 +263,7 @@ class NivelOne():
             "../assets/f.jpg"), None, 0, 0, 0)
         self.win.blit(self.bg.currentImage, (0, 0))
         self.bgWidth, self.bgHeight = self.bg.currentImage.get_rect().size
-        self.stageWidth = self.bgWidth * 2
+        self.stageWidth = self.bgWidth * 4
         self.startScrollingPosX = HW
         self.stagePosX = 0
 
@@ -271,22 +271,50 @@ class NivelOne():
         self.players = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
         self.bases = pg.sprite.Group()
+        self.lifes = pg.sprite.Group()
+        self.tumis = pg.sprite.Group()
+        self.foods = pg.sprite.Group()
 
         #ADD PLAYER
         self.player = Player(self)
         self.players.add(self.player)
         #ADD PLATFORMS
         base = Platform(0, FLOOR , 3*WIDTH, HEIGHT - FLOOR)
-        p2 = Platform(100 , FLOOR - 100 , 100 , 20)
-        p3 = Platform(1000 , FLOOR - 100 , 100 , 20)
+        p1 = Platform(750 , FLOOR - 100 , 100 , 20)
+        p2 = Platform(1135.5 , FLOOR - 100 , 100 , 20)
+        p3 = Platform(1411 , FLOOR - 200 , 50 , 20)
+        p4 = Platform(1636.5 , FLOOR - 100 , 100 , 20)
+        p5 = Platform(2350 , FLOOR - 100 , 100 , 20)
+        p6 = Platform(3055.5 , FLOOR - 100 , 100 , 20)
+        p7 = Platform(3331 , FLOOR - 200 , 50 , 20)
+        p8 = Platform(3556.5 , FLOOR - 100 , 100 , 20)
         self.bases.add(base)
+        self.platforms.add(p1)
         self.platforms.add(p2)
         self.platforms.add(p3)
+        self.platforms.add(p4)
+        self.platforms.add(p5)
+        self.platforms.add(p6)
+        self.platforms.add(p7)
+        self.platforms.add(p8)
+        #ADD LIFE
+        l1 = Life(1423.5 , FLOOR - 225)
+        l2 = Life(3343.5 , FLOOR - 225)
+        self.lifes.add(l1)
+        self.lifes.add(l2)
+        #ADD TUMIS
+        t1 = Tumi(1674 ,FLOOR - 150)
+        t2 = Tumi(3093 ,FLOOR - 150)
+        self.tumis.add(t1)
+        self.tumis.add(t2)
         
     def draw(self):
         self.bases.draw(self.win)
         self.players.draw(self.win)
         self.platforms.draw(self.win)
+        self.lifes.draw(self.win)
+        self.tumis.draw(self.win)
+        self.foods.draw(self.win)
 
     def events(self):
         #mouse = pg.mouse.get_pos()
@@ -322,15 +350,16 @@ class NivelOne():
     
     def move_screen(self, dir):
         rel_x = round(self.stagePosX % self.bgWidth,0)
-        print("REL_X :{}".format(rel_x))
-        
         self.win.blit(self.bg.currentImage,
                             (rel_x - self.bgWidth, 0))
         if rel_x < WIDTH:
             self.win.blit(self.bg.currentImage, (rel_x, 0))
-        print("DES :{}".format(self.player.des))
         if self.player.rect.center[0] == self.startScrollingPosX:
             self.platforms.update(self.player.des)
+            self.lifes.update(self.player.des)
+            self.tumis.update(self.player.des)
+            self.foods.update(self.player.des)
+            
                 
 
     

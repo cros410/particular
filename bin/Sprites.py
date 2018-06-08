@@ -8,7 +8,7 @@ class Player(pg.sprite.Sprite):
     def __init__(self, stage):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.Surface((50, 50))
-        self.image.fill(YELLOW)
+        self.image.fill(GRAY)
         self.stage = stage
         self.rect = self.image.get_rect()
         self.rect.center = (25, 300)
@@ -67,11 +67,50 @@ class Platform(pg.sprite.Sprite):
     def __init__(self, x, y, w, h):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.Surface((w, h))
-        self.image.fill(GREEN)
+        self.image.fill(PURPLE)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
     
+    def update(self , dis):
+        self.rect.x -= dis
+
+class Life(pg.sprite.Sprite):
+
+    def __init__(self , x, y):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.Surface((25 , 25))
+        self.image.fill(RED)
+        self.rect = self.image.get_rect()
+        self.rect.x = x 
+        self.rect.y = y
+
+    def update(self , dis):
+        self.rect.x -= dis
+
+class Tumi(pg.sprite.Sprite):
+
+    def __init__(self , x, y):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.Surface((25 , 50))
+        self.image.fill(YELLOW)
+        self.rect = self.image.get_rect()
+        self.rect.x = x 
+        self.rect.y = y
+
+    def update(self , dis):
+        self.rect.x -= dis
+
+class Food(pg.sprite.Sprite):
+
+    def __init__(self , x, y):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.Surface((25 , 25))
+        self.image.fill(BLUE)
+        self.rect = self.image.get_rect()
+        self.rect.x = x 
+        self.rect.y = y
+
     def update(self , dis):
         self.rect.x -= dis
     
