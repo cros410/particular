@@ -307,6 +307,15 @@ class NivelOne():
         t2 = Tumi(3093 ,FLOOR - 150)
         self.tumis.add(t1)
         self.tumis.add(t2)
+        #LETRA
+        self.myfont = pg.font.SysFont("monospace", 20, True)
+        #PUNTAJE
+        self.poits = 0
+        #LIFES
+        self.lifes_points = 3
+        #LOAD IMAGES
+        self.image_life = pg.image.load('../assets/life.png')
+        
         
     def draw(self):
         self.bases.draw(self.win)
@@ -315,6 +324,16 @@ class NivelOne():
         self.lifes.draw(self.win)
         self.tumis.draw(self.win)
         self.foods.draw(self.win)
+        #RENDER POINTS
+        label = self.myfont.render("PUNTAJE : {}".format(self.poits), 1, BLACK)
+        self.win.blit(label, (5, 0))
+        #RENDER LIFE
+        lifes = self.myfont.render("VIDAS : ", 1, BLACK)
+        place  = HW +  100
+        self.win.blit(lifes, (HW, 0))
+        for l in range(self.lifes_points):
+            self.win.blit(self.image_life , (place, 0))
+            place += 30
 
     def events(self):
         #mouse = pg.mouse.get_pos()
@@ -346,6 +365,17 @@ class NivelOne():
             if hit_floor:
                 self.player.pos.y = hit_floor[0].rect.top + 1
                 self.player.vel.y = 0
+        #CHECK HIT A LIFE
+        hits_lifes = pg.sprite.spritecollide(self.player, self.lifes , False)
+        if hits_lifes:
+            self.lifes.remove(hits_lifes[0])
+            self.lifes_points += 1
+        #CHECK HIT A TUMI
+        hits_tumis = pg.sprite.spritecollide(self.player, self.tumis , False)
+        if hits_tumis:
+            self.tumis.remove(hits_tumis[0])
+            self.poits += 10
+
                 
     
     def move_screen(self, dir):
