@@ -270,18 +270,21 @@ class NivelOne():
         # CONJUNTO DE IMAGENES
         self.players = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
+        self.bases = pg.sprite.Group()
+
         #ADD PLAYER
         self.player = Player(self)
         self.players.add(self.player)
         #ADD PLATFORMS
-        base = Platform(0, FLOOR , WIDTH, HEIGHT - FLOOR)
+        base = Platform(0, FLOOR , 3*WIDTH, HEIGHT - FLOOR)
         p2 = Platform(100 , FLOOR - 100 , 100 , 20)
-        self.platforms.add(base)
+        p3 = Platform(1000 , FLOOR - 100 , 100 , 20)
+        self.bases.add(base)
         self.platforms.add(p2)
+        self.platforms.add(p3)
         
-        
-
     def draw(self):
+        self.bases.draw(self.win)
         self.players.draw(self.win)
         self.platforms.draw(self.win)
 
@@ -301,15 +304,33 @@ class NivelOne():
                 if  event.key == pg.K_SPACE:
                     self.player.jump()
         self.player.move(move)
-         
+        self.move_screen(move)
 
     def update(self):
-        #CHECK IF PLAYER HIT A PLATFOR 
+        #CHECK IF PLAYER HIT A PLATFOR
         if  self.player.vel.y > 0:
-            
+            hit_floor = pg.sprite.spritecollide(self.player , self.bases , False)
             hits = pg.sprite.spritecollide(self.player , self.platforms , False)
             if hits:
                 self.player.pos.y = hits[0].rect.top + 1
                 self.player.vel.y = 0
+                
+            if hit_floor:
+                self.player.pos.y = hit_floor[0].rect.top + 1
+                self.player.vel.y = 0
+                
+    
+    def move_screen(self, dir):
+        rel_x = round(self.stagePosX % self.bgWidth,0)
+        print("REL_X :{}".format(rel_x))
+        
+        self.win.blit(self.bg.currentImage,
+                            (rel_x - self.bgWidth, 0))
+        if rel_x < WIDTH:
+            self.win.blit(self.bg.currentImage, (rel_x, 0))
+        print("DES :{}".format(self.player.des))
+        if self.player.rect.center[0] == self.startScrollingPosX:
+            self.platforms.update(self.player.des)
+                
 
     
