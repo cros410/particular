@@ -307,6 +307,9 @@ class NivelOne():
         t2 = Tumi(3093 ,FLOOR - 150)
         self.tumis.add(t1)
         self.tumis.add(t2)
+        #ADD FOOD
+        f1 = Food(100 , 100)
+        self.foods.add(f1)
         #LETRA
         self.myfont = pg.font.SysFont("monospace", 20, True)
         #PUNTAJE

@@ -79,8 +79,7 @@ class Life(pg.sprite.Sprite):
 
     def __init__(self , x, y):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.Surface((25 , 25))
-        self.image.fill(RED)
+        self.image = pg.image.load("../assets/life.png")
         self.rect = self.image.get_rect()
         self.rect.x = x 
         self.rect.y = y
@@ -92,8 +91,7 @@ class Tumi(pg.sprite.Sprite):
 
     def __init__(self , x, y):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.Surface((25 , 50))
-        self.image.fill(YELLOW)
+        self.image = pg.image.load("../assets/tumi.png")
         self.rect = self.image.get_rect()
         self.rect.x = x 
         self.rect.y = y
@@ -105,8 +103,7 @@ class Food(pg.sprite.Sprite):
 
     def __init__(self , x, y):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.Surface((25 , 25))
-        self.image.fill(BLUE)
+        self.image = pg.image.load("../assets/food.png")
         self.rect = self.image.get_rect()
         self.rect.x = x 
         self.rect.y = y
