@@ -280,6 +280,7 @@ class NivelOne():
         self.players.add(self.player)
         #ADD PLATFORMS
         base = Platform(0, FLOOR , 3*WIDTH, HEIGHT - FLOOR)
+        pt = Platform(200 , FLOOR - 25 , 100 , 20)
         p1 = Platform(750 , FLOOR - 100 , 100 , 20)
         p2 = Platform(1135.5 , FLOOR - 100 , 100 , 20)
         p3 = Platform(1411 , FLOOR - 200 , 50 , 20)
@@ -289,6 +290,7 @@ class NivelOne():
         p7 = Platform(3331 , FLOOR - 200 , 50 , 20)
         p8 = Platform(3556.5 , FLOOR - 100 , 100 , 20)
         self.bases.add(base)
+        self.platforms.add(pt)
         self.platforms.add(p1)
         self.platforms.add(p2)
         self.platforms.add(p3)
@@ -318,6 +320,14 @@ class NivelOne():
         self.lifes_points = 3
         #LOAD IMAGES
         self.image_life = pg.image.load('../assets/life.png')
+        #LOAD COMPONENTS
+        self.arrayComponents = []
+        self.arrayPause = []
+        self.pause = Component(win , pg.image.load(
+            "../assets/pause.png") , None , 905 , 5 , 0)
+        self.marco = Component(win , pg.image.load(
+            "../assets/marco.png") , None , 0 , 0 , 0)
+        self.__loadComponents()
         
         
     def draw(self):
@@ -337,9 +347,11 @@ class NivelOne():
         for l in range(self.lifes_points):
             self.win.blit(self.image_life , (place, 0))
             place += 30
+        for component in self.arrayComponents:
+            component.draw()
 
     def events(self):
-        #mouse = pg.mouse.get_pos()
+        mouse = pg.mouse.get_pos()
         move = 0
         k = pg.key.get_pressed()
         if k[pg.K_RIGHT]:
@@ -353,21 +365,28 @@ class NivelOne():
             if event.type == pg.KEYDOWN:
                 if  event.key == pg.K_SPACE:
                     self.player.jump()
+            if event.type == pg.MOUSEBUTTONDOWN:
+                if self.pause.inside(mouse[0], mouse[1]):
+                    self.goPause()
+                    print("PAUSE")
         self.player.move(move)
         self.move_screen(move)
 
     def update(self):
-        #CHECK IF PLAYER HIT A PLATFOR
-        if  self.player.vel.y > 0:
-            hit_floor = pg.sprite.spritecollide(self.player , self.bases , False)
-            hits = pg.sprite.spritecollide(self.player , self.platforms , False)
-            if hits:
-                self.player.pos.y = hits[0].rect.top + 1
-                self.player.vel.y = 0
-                
-            if hit_floor:
+        
+        #CHECK IF PLAYER HIT THE FLOOR
+        hit_floor = pg.sprite.spritecollide(self.player , self.bases , False)
+        if hit_floor:
                 self.player.pos.y = hit_floor[0].rect.top + 1
                 self.player.vel.y = 0
+
+        # CHECK IF PLAYER HIT A PLATFOR
+        if  self.player.vel.y > 0:
+            hits_platfroms = pg.sprite.spritecollide(self.player , self.platforms , False)
+            if hits_platfroms:
+                self.player.pos.y = hits_platfroms[0].rect.top + 1
+                self.player.vel.y = 0
+           
         #CHECK HIT A LIFE
         hits_lifes = pg.sprite.spritecollide(self.player, self.lifes , False)
         if hits_lifes:
@@ -379,8 +398,22 @@ class NivelOne():
             self.tumis.remove(hits_tumis[0])
             self.poits += 10
 
+    def __loadComponents(self):
+        self.arrayComponents.append(self.pause)
+        self.arrayPause.append(self.marco)
                 
-    
+    def goPause(self):
+        # self.game.changeState(PauseStage(self.game, self.win))
+        pause = True
+        while (pause):
+            for component in self.arrayPause:
+                component.draw()
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                   pause = False
+
+
+
     def move_screen(self, dir):
         rel_x = round(self.stagePosX % self.bgWidth,0)
         self.win.blit(self.bg.currentImage,
@@ -393,6 +426,32 @@ class NivelOne():
             self.tumis.update(self.player.des)
             self.foods.update(self.player.des)
             
-                
 
+class PauseStage():
+
+    def __init__(self , game, win):
+        self.game = game
+        self.win = win
+        self.arrayComponents = []
+        self.marco = Component(win , pg.image.load(
+            "../assets/marco.png") , None , 280 , 160 , 0)
+        self.__loadComponents()
     
+    def draw(self):
+        for component in self.arrayComponents:
+            component.draw()
+    
+    def events(self):
+        mouse = pg.mouse.get_pos()
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+            if event.type == pg.MOUSEBUTTONDOWN:
+                pass
+
+    def update(self):
+        pass
+    
+    def __loadComponents(self):
+        self.arrayComponents.append(self.marco)
