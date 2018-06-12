@@ -266,7 +266,7 @@ class NivelOne():
         self.stageWidth = self.bgWidth * 4
         self.startScrollingPosX = HW
         self.stagePosX = 0
-
+        self.pauseState = False
         # CONJUNTO DE IMAGENES
         self.players = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
@@ -326,7 +326,13 @@ class NivelOne():
         self.pause = Component(win , pg.image.load(
             "../assets/pause.png") , None , 905 , 5 , 0)
         self.marco = Component(win , pg.image.load(
-            "../assets/marco.png") , None , 0 , 0 , 0)
+            "../assets/pause/pause_marco.png") , None ,280 , 160 , 0)
+        self.play = Component(win, pg.image.load("../assets/pause/btn_play.png"),
+                              pg.image.load("../assets/pause/btn_alt_play.png"), 325.3, 340, 1)
+        self.exit = Component(win, pg.image.load("../assets/pause/btn_exit.png"),
+                              pg.image.load("../assets/pause/btn_alt_exit.png"), 502.6, 340, 1)
+        self.pause_tittle = Component(win , pg.image.load(
+            "../assets/pause/pause_tittle.png") , None ,414 , 200 , 0)
         self.__loadComponents()
         
         
@@ -349,28 +355,34 @@ class NivelOne():
             place += 30
         for component in self.arrayComponents:
             component.draw()
+        for component in self.arrayPause:
+            component.draw()
+            component.hover()
 
     def events(self):
+        
         mouse = pg.mouse.get_pos()
         move = 0
         k = pg.key.get_pressed()
         if k[pg.K_RIGHT]:
             move  = 1
         elif k[pg.K_LEFT]:
-           move = -1
+            move = -1
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
-            if event.type == pg.KEYDOWN:
-                if  event.key == pg.K_SPACE:
-                    self.player.jump()
-            if event.type == pg.MOUSEBUTTONDOWN:
-                if self.pause.inside(mouse[0], mouse[1]):
-                    self.goPause()
-                    print("PAUSE")
-        self.player.move(move)
-        self.move_screen(move)
+            if not self.pauseState:
+                if event.type == pg.KEYDOWN:
+                    if  event.key == pg.K_SPACE:
+                        self.player.jump()
+                if event.type == pg.MOUSEBUTTONDOWN:
+                    if self.pause.inside(mouse[0], mouse[1]):
+                        self.goPause()
+                        print("PAUSE")
+        if not self.pauseState:
+            self.player.move(move)
+            self.move_screen(move)
 
     def update(self):
         
@@ -401,17 +413,14 @@ class NivelOne():
     def __loadComponents(self):
         self.arrayComponents.append(self.pause)
         self.arrayPause.append(self.marco)
+        self.arrayPause.append(self.play)
+        self.arrayPause.append(self.exit)
+        self.arrayPause.append(self.pause_tittle)
                 
     def goPause(self):
         # self.game.changeState(PauseStage(self.game, self.win))
-        pause = True
-        while (pause):
-            for component in self.arrayPause:
-                component.draw()
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                   pause = False
-
+        self.pauseState = True
+        self.__move_pause()
 
 
     def move_screen(self, dir):
@@ -426,6 +435,8 @@ class NivelOne():
             self.tumis.update(self.player.des)
             self.foods.update(self.player.des)
             
+    def __move_pause(self):
+        pass
 
 class PauseStage():
 
