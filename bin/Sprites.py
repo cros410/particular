@@ -8,13 +8,14 @@ class Player(pg.sprite.Sprite):
     def __init__(self, stage):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.Surface((50, 50))
-        self.image.fill(GRAY)
         self.stage = stage
+        self.image.fill(self.__getSuit())
         self.rect = self.image.get_rect()
         self.rect.center = (25, 300)
         self.pos = vec(25, 300) #POSITION IN ALL STAGE 
         self.pos_screen = vec(25, 300) #POSITION IN SCREEN
         self.vel = vec(0, 0)
+        self.a = self.__getAcceleration()
         self.acc = vec(0, 0)
         self.des = 0
 
@@ -26,7 +27,7 @@ class Player(pg.sprite.Sprite):
         #DEF GRAVITY
         self.acc = vec(0,PLAYER_GRAV)
         #DEF ACELE
-        self.acc.x = PLAYER_ACC * side
+        self.acc.x = self.a * side
         #DEF FRICC
         self.acc.x += self.vel.x * PLAYER_FRIC
         # ECU OF MOVE
@@ -62,6 +63,23 @@ class Player(pg.sprite.Sprite):
         if hits or hits_floor:
             self.vel.y = -10      
 
+    def __getSuit(self):
+        switcher = {
+            1 : GREEN,
+            2 : BLUE,
+            3 : ORANGE
+        }
+        return switcher.get(self.stage.game.suit)
+
+    def __getAcceleration(self):
+        switcher = {
+            1 : PLAYER_ACC_1,
+            2 : PLAYER_ACC_2,
+            3 : PLAYER_ACC_3
+        }
+        return switcher.get(self.stage.game.difficulty)
+
+
 class Platform(pg.sprite.Sprite):
 
     def __init__(self, x, y, w, h):
@@ -79,7 +97,7 @@ class Life(pg.sprite.Sprite):
 
     def __init__(self , x, y):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.image.load("../assets/life.png")
+        self.image = pg.image.load("../assets/one/life.png")
         self.rect = self.image.get_rect()
         self.rect.x = x 
         self.rect.y = y
@@ -91,7 +109,7 @@ class Tumi(pg.sprite.Sprite):
 
     def __init__(self , x, y):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.image.load("../assets/tumi.png")
+        self.image = pg.image.load("../assets/one/tumi.png")
         self.rect = self.image.get_rect()
         self.rect.x = x 
         self.rect.y = y
@@ -103,7 +121,7 @@ class Food(pg.sprite.Sprite):
 
     def __init__(self , x, y):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.image.load("../assets/food.png")
+        self.image = pg.image.load("../assets/one/food.png")
         self.rect = self.image.get_rect()
         self.rect.x = x 
         self.rect.y = y
