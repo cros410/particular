@@ -268,6 +268,7 @@ class NivelOne():
         self.stagePosX = 0
         self.pauseState = False
         self.loseState = False
+        self.name = ""
         # CONJUNTO DE IMAGENES
         self.players = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
@@ -339,6 +340,7 @@ class NivelOne():
         #LOAD COMPONENTS LOSE
         
         
+        
     def draw(self):
         self.bases.draw(self.win)
         self.players.draw(self.win)
@@ -362,9 +364,12 @@ class NivelOne():
             for component in self.arrayPause:
                 component.draw()
                 component.hover()
+        #RENDER NAME
+        pg.draw.rect(self.win,(255,255,255),(50,50,200,30))
+        n = self.myfont.render(self.name, 1, BLACK)
+        self.win.blit(n, (50, 50))
 
     def events(self):
-        
         mouse = pg.mouse.get_pos()
         move = 0
         k = pg.key.get_pressed()
@@ -380,6 +385,12 @@ class NivelOne():
                 if event.type == pg.KEYDOWN:
                     if  event.key == pg.K_SPACE:
                         self.player.jump()
+                    if event.unicode.isalpha():
+                        self.name += event.unicode
+                    elif event.key == pg.K_BACKSPACE:
+                        self.name = self.name[:-1]
+                    elif event.key == pg.K_RETURN:
+                        self.name = ""
                 if event.type == pg.MOUSEBUTTONDOWN:
                     if self.pause.inside(mouse[0], mouse[1]):
                         self.goPause(True)
@@ -445,3 +456,5 @@ class NivelOne():
             self.lifes.update(self.player.des)
             self.tumis.update(self.player.des)
             self.foods.update(self.player.des)
+    
+        
