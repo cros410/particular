@@ -21,6 +21,10 @@ class Game():
         self.music = params[4]
         self.stage = MenuStage(self, self.win)
         self.sound_click = pg.mixer.Sound("../assets/sound/click.wav")
+        self.sound_coin = pg.mixer.Sound("../assets/sound/coin.wav")
+        self.sound_life = pg.mixer.Sound("../assets/sound/life.wav")
+        self.sound_food = pg.mixer.Sound("../assets/sound/food.wav")
+        self.sound_lose = pg.mixer.Sound("../assets/sound/lose.wav")
         pg.mixer.music.load("../assets/sound/game.wav")
         if self.music == 1:
             pg.mixer.music.play()
@@ -52,6 +56,21 @@ class Game():
     def click_sound(self):
         if self.sound == 1 :
             pg.mixer.Sound.play(self.sound_click)
+    
+    def coin_sound(self):
+        if self.sound == 1 :
+            pg.mixer.Sound.play(self.sound_coin)
+    
+    def life_sound(self):
+        if self.sound == 1 :
+            pg.mixer.Sound.play(self.sound_life)
+    
+    def food_sound(self):
+        if self.sound == 1 :
+            pg.mixer.Sound.play(self.sound_food)
+    def lose_sound(self):
+        if self.sound == 1 :
+            pg.mixer.Sound.play(self.sound_lose)
 
     def __load(self):
         database = Database()

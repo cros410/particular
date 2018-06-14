@@ -40,6 +40,8 @@ class Player(pg.sprite.Sprite):
         # NO OUT OF STAGE
         if self.pos.x >= self.stage.stageWidth - WHP:
             self.pos.x = self.stage.stageWidth - WHP
+            self.stage.loseState = True
+            self.stage.game.lose_sound()
         if self.pos.x <= WHP:
             self.pos.x = WHP
         # IN THE MIDDLE OF THE SCREEM

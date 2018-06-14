@@ -20,3 +20,5 @@ PLAYER_FRIC = -0.1
 PLAYER_GRAV = 0.4
 
 FLOOR = 583
+
+URL_API = "https://inkachallenge.herokuapp.com/api"

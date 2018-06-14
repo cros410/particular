@@ -4,6 +4,8 @@ from Component import Component
 from config import *
 from db.database import Database
 from Sprites import *
+import requests as requests
+import json
 
 
 class MenuStage():
@@ -312,7 +314,7 @@ class NivelOne():
         self.tumis.add(t1)
         self.tumis.add(t2)
         #ADD FOOD
-        f1 = Food(100 , 100)
+        f1 = Food(1160 , FLOOR - 125)
         self.foods.add(f1)
         #LETRA
         self.myfont = pg.font.SysFont("monospace", 20, True)
@@ -325,21 +327,26 @@ class NivelOne():
         #LOAD COMPONENTS
         self.arrayComponents = []
         self.arrayPause = []
+        self.arrayLose = []
         self.pause = Component(win , pg.image.load(
             "../assets/one/pause.png") , None , 905 , 5 , 0)
         #LOAD COMPONENTS PAUSE
-        self.marco = Component(win , pg.image.load(
+        self.marco_pause = Component(win , pg.image.load(
             "../assets/pause/pause_marco.png") , None ,280 , 160 , 0)
         self.play = Component(win, pg.image.load("../assets/pause/btn_play.png"),
                               pg.image.load("../assets/pause/btn_alt_play.png"), 325.3, 340, 1)
         self.exit = Component(win, pg.image.load("../assets/pause/btn_exit.png"),
                               pg.image.load("../assets/pause/btn_alt_exit.png"), 502.6, 340, 1)
-        self.pause_tittle = Component(win , pg.image.load(
-            "../assets/pause/pause_tittle.png") , None ,414 , 200 , 0)
-        self.__loadComponents()
+        
         #LOAD COMPONENTS LOSE
+        self.marco_lose = Component(win , pg.image.load(
+            "../assets/lose/lose_marco.png") , None ,280 , 160 , 0)
+        self.save = Component(win, pg.image.load("../assets/lose/btn_guardar.png"),
+                              pg.image.load("../assets/lose/btn_alt_guardar.png"), 325.3, 340, 1)
+        self.exit_lose = Component(win, pg.image.load("../assets/lose/btn_exit.png"),
+                              pg.image.load("../assets/lose/btn_alt_exit.png"), 502.6, 340, 1)
         
-        
+        self.__loadComponents()
         
     def draw(self):
         self.bases.draw(self.win)
@@ -364,11 +371,15 @@ class NivelOne():
             for component in self.arrayPause:
                 component.draw()
                 component.hover()
-        #RENDER NAME
-        pg.draw.rect(self.win,(255,255,255),(50,50,200,30))
-        n = self.myfont.render(self.name, 1, BLACK)
-        self.win.blit(n, (50, 50))
-
+        if self.loseState:
+            for component in self.arrayLose:
+                component.draw()
+                component.hover()
+            #RENDER NAME
+            pg.draw.rect(self.win,(255,255,255),(330,270,300,40))
+            n = self.myfont.render(self.name, 1, BLACK)
+            self.win.blit(n, (350,280))
+    
     def events(self):
         mouse = pg.mouse.get_pos()
         move = 0
@@ -381,16 +392,10 @@ class NivelOne():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
-            if not self.pauseState:
+            if not self.pauseState and  not self.loseState:
                 if event.type == pg.KEYDOWN:
                     if  event.key == pg.K_SPACE:
                         self.player.jump()
-                    if event.unicode.isalpha():
-                        self.name += event.unicode
-                    elif event.key == pg.K_BACKSPACE:
-                        self.name = self.name[:-1]
-                    elif event.key == pg.K_RETURN:
-                        self.name = ""
                 if event.type == pg.MOUSEBUTTONDOWN:
                     if self.pause.inside(mouse[0], mouse[1]):
                         self.goPause(True)
@@ -400,9 +405,22 @@ class NivelOne():
                         self.goPause(False)
                     if self.exit.inside(mouse[0], mouse[1]):
                         self.goMenu()
+            if self.loseState:
+                if event.type == pg.KEYDOWN:
+                    if event.unicode.isalpha():
+                        self.name += event.unicode
+                    elif event.key == pg.K_BACKSPACE:
+                        self.name = self.name[:-1]
+                    elif event.key == pg.K_RETURN:
+                        self.name = ""
+                if event.type == pg.MOUSEBUTTONDOWN:
+                    if self.save.inside(mouse[0], mouse[1]):
+                        self.save_score()
+                    if self.exit_lose.inside(mouse[0], mouse[1]):
+                        self.goMenu()
                         
 
-        if not self.pauseState:
+        if not self.pauseState and not self.loseState:
             self.player.move(move)
             self.move_screen(move)
 
@@ -424,21 +442,31 @@ class NivelOne():
         #CHECK HIT A LIFE
         hits_lifes = pg.sprite.spritecollide(self.player, self.lifes , False)
         if hits_lifes:
+            self.game.life_sound()
             self.lifes.remove(hits_lifes[0])
             self.lifes_points += 1
         #CHECK HIT A TUMI
         hits_tumis = pg.sprite.spritecollide(self.player, self.tumis , False)
         if hits_tumis:
+            self.game.coin_sound()
             self.tumis.remove(hits_tumis[0])
             self.poits += 10
+        #CHECK HIT A FOOD
+        hits_food = pg.sprite.spritecollide(self.player, self.foods , False)
+        if hits_food:
+            self.game.food_sound()
+            self.foods.remove(hits_food[0])
+            #self.poits += 10
 
     def __loadComponents(self):
         self.arrayComponents.append(self.pause)
-        self.arrayPause.append(self.marco)
+        self.arrayPause.append(self.marco_pause)
         self.arrayPause.append(self.play)
         self.arrayPause.append(self.exit)
-        self.arrayPause.append(self.pause_tittle)
-                
+        self.arrayLose.append(self.marco_lose)
+        self.arrayLose.append(self.exit_lose)
+        self.arrayLose.append(self.save)
+        
     def goPause(self, state):
         self.pauseState = state
 
@@ -457,4 +485,9 @@ class NivelOne():
             self.tumis.update(self.player.des)
             self.foods.update(self.player.des)
     
-        
+    def save_score(self):
+        payload = {"nombre" : self.name , "puntaje" : self.poits}
+        r = requests.post(URL_API + "/ranking", data=payload)
+        print("Status : {}".format(r.status_code))
+        print(r.json())
+        self.goMenu()
