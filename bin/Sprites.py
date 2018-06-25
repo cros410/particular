@@ -2,28 +2,72 @@ import pygame as pg
 from config import *
 vec = pg.math.Vector2
 
+class Spritesheet:
+    def __init__(self, filename):
+        self.spritesheet = pg.image.load(filename)
+
+    def get_image(self, x, y, width, height):
+        image = pg.Surface((width, height))
+        image.blit(self.spritesheet, (0, 0), (x, y, width, height))
+        image = pg.transform.scale(image, (width, height))
+        return image
 
 class Player(pg.sprite.Sprite):
 
     def __init__(self, stage):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.Surface((50, 50))
         self.stage = stage
-        self.image.fill(self.__getSuit())
+        # self.image = pg.Surface((50, 50))
+        # self.image.set_colorkey(BLACK)
+        # self.image.fill(self.__getSuit())
+        self.walking = False
+        self.jumping = False
+        self.current_frame = 0
+        self.last_update = 0
+        self.load_images()
+        self.image = self.standing_frames[0]
+        #self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
         self.rect.center = (25, 300)
-        self.pos = vec(25, 300) #POSITION IN ALL STAGE 
+        self.pos = vec(48.5, 300) #POSITION IN ALL STAGE 
         self.pos_screen = vec(25, 300) #POSITION IN SCREEN
         self.vel = vec(0, 0)
         self.a = self.__getAcceleration()
         self.acc = vec(0, 0)
         self.des = 0
 
-    def move(self, side):
-        # print("ACC :{}".format(self.acc.x))
-        # print("VEL :{}".format(self.vel.x))
-        # print("POS :{}".format(self.pos.x))
+    def load_images(self):
+        self.standing_frames = [self.stage.spritesheet.get_image(20, 10, 48 , 56),self.stage.spritesheet.get_image(117, 10, 48 , 56),
+                                self.stage.spritesheet.get_image(214, 10, 48 , 56),self.stage.spritesheet.get_image(311, 10, 48 , 56),
+                                self.stage.spritesheet.get_image(408, 10, 48 , 56),self.stage.spritesheet.get_image(505, 10, 48 , 56)]
+        for frame in self.standing_frames:
+            frame.set_colorkey(BLACK)
         
+        self.walk_frames_r = [self.stage.spritesheet.get_image(20, 81, 48 , 56),self.stage.spritesheet.get_image(117, 81, 48 , 56),
+                                self.stage.spritesheet.get_image(214, 81, 48 , 56),self.stage.spritesheet.get_image(311, 81, 48 , 56),
+                                self.stage.spritesheet.get_image(408, 81, 48 , 56),self.stage.spritesheet.get_image(505, 81, 48 , 56)]
+        for frame in self.walk_frames_r:
+            frame.set_colorkey(BLACK)
+        
+        self.walk_frames_l = []
+        for frame in self.walk_frames_r:
+            self.walk_frames_l.append(pg.transform.flip(frame,True, False))
+        for frame in self.walk_frames_l:
+            frame.set_colorkey(BLACK)
+        
+        self.jump_frames_r = [self.stage.spritesheet.get_image(214, 152, 48 , 56),self.stage.spritesheet.get_image(311, 152, 48 , 56),
+                                self.stage.spritesheet.get_image(408, 152, 48 , 56)]
+        for frame in self.jump_frames_r:
+            frame.set_colorkey(BLACK)
+
+        self.jump_frames_l = []
+        for frame in jump_frames_r:
+            self.jump_frames_l.append(pg.transform.flip(frame,True, False))
+        for frame in self.jump_frames_l:
+            frame.set_colorkey(BLACK)
+
+    def move(self, side):
+        self.animate(side)
         #DEF GRAVITY
         self.acc = vec(0,PLAYER_GRAV)
         #DEF ACELE
@@ -33,6 +77,8 @@ class Player(pg.sprite.Sprite):
         # ECU OF MOVE
         self.vel += self.acc
         m = self.pos.x
+        if abs(self.vel.x) < 0.1:
+            self.vel.x = 0
         self.pos += self.vel + 0.5 * self.acc
         self.des = round(self.pos.x - m,0)
         
@@ -56,6 +102,49 @@ class Player(pg.sprite.Sprite):
             
         
         self.rect.center = (self.pos_screen.x, self.pos.y-WHP)
+
+    def animate(self,side):
+        now = pg.time.get_ticks()
+        if side != 0:
+            self.walking = True
+        else:
+            self.walking = False
+
+        #show walk animation
+        if self.walking:
+            if now - self.last_update > 100:
+                self.last_update = now
+                self.current_frame = (self.current_frame + 1) % len(self.walk_frames_r)
+                bottom = self.rect.bottom
+                if self.vel.x  > 0:
+                    self.image = self.walk_frames_r[self.current_frame]
+                else:
+                    self.image = self.walk_frames_l[self.current_frame]
+                self.rect = self.image.get_rect()
+                self.rect.bottom = bottom
+
+        #show jump animtion
+        if self.jumping:
+            if now - self.last_update > 50:
+                self.last_update = now
+                self.current_frame = (self.current_frame + 1) % len(self.jump_frames)
+                bottom = self.rect.bottom
+                if self.vel.x  > 0:
+                    self.image = self.jump_frames_r[self.current_frame]
+                else:
+                    self.image = self.jump_frames_l[self.current_frame]
+                self.rect = self.image.get_rect()
+                self.rect.bottom = bottom
+
+        #show stopped animation
+        if not self.jumping and not self.walking:
+            if now - self.last_update > 200:
+                self.last_update = now
+                self.current_frame = (self.current_frame + 1) % len(self.standing_frames)
+                bottom = self.rect.bottom
+                self.image = self.standing_frames[self.current_frame]
+                self.rect = self.image.get_rect()
+                self.rect.bottom = bottom
 
     def jump(self):
         self.rect.x += 1

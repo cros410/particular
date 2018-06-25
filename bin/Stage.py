@@ -262,7 +262,7 @@ class NivelOne():
         self.win = win
         self.arrayComponente = []
         self.bg = Component(win, pg.image.load(
-            "../assets/one/f.jpg"), None, 0, 0, 0)
+            "../assets/one/f.png"), None, 0, 0, 0)
         self.win.blit(self.bg.currentImage, (0, 0))
         self.bgWidth, self.bgHeight = self.bg.currentImage.get_rect().size
         self.stageWidth = self.bgWidth * 4
@@ -278,7 +278,7 @@ class NivelOne():
         self.lifes = pg.sprite.Group()
         self.tumis = pg.sprite.Group()
         self.foods = pg.sprite.Group()
-
+        self.spritesheet = Spritesheet("../assets/one/player1.png")
         #ADD PLAYER
         self.player = Player(self)
         self.players.add(self.player)
@@ -426,19 +426,23 @@ class NivelOne():
 
     def update(self):
         
+        self.player.jumping = True
         #CHECK IF PLAYER HIT THE FLOOR
         hit_floor = pg.sprite.spritecollide(self.player , self.bases , False)
         if hit_floor:
-                self.player.pos.y = hit_floor[0].rect.top + 1
+                self.player.jumping = False
+                self.player.pos.y = hit_floor[0].rect.top - 2
                 self.player.vel.y = 0
 
-        # CHECK IF PLAYER HIT A PLATFOR
+        #CHECK IF PLAYER HIT A PLATFOR
         if  self.player.vel.y > 0:
             hits_platfroms = pg.sprite.spritecollide(self.player , self.platforms , False)
             if hits_platfroms:
-                self.player.pos.y = hits_platfroms[0].rect.top + 1
+                self.player.jumping = False
+                self.player.pos.y = hits_platfroms[0].rect.top - 2
                 self.player.vel.y = 0
-           
+
+        
         #CHECK HIT A LIFE
         hits_lifes = pg.sprite.spritecollide(self.player, self.lifes , False)
         if hits_lifes:

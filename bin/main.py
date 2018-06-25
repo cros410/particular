@@ -68,6 +68,7 @@ class Game():
     def food_sound(self):
         if self.sound == 1 :
             pg.mixer.Sound.play(self.sound_food)
+    
     def lose_sound(self):
         if self.sound == 1 :
             pg.mixer.Sound.play(self.sound_lose)
