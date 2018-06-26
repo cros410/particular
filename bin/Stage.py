@@ -263,7 +263,10 @@ class NivelOne():
         self.arrayComponente = []
         self.bg = Component(win, pg.image.load(
             "../assets/one/f.png"), None, 0, 0, 0)
+        self.floor = Component(win, pg.image.load(
+            "../assets/one/floor.png"), None, 0, FLOOR, 0)    
         self.win.blit(self.bg.currentImage, (0, 0))
+        self.win.blit(self.floor.currentImage, (0, 0))
         self.bgWidth, self.bgHeight = self.bg.currentImage.get_rect().size
         self.stageWidth = self.bgWidth * 4
         self.startScrollingPosX = HW
@@ -278,21 +281,22 @@ class NivelOne():
         self.lifes = pg.sprite.Group()
         self.tumis = pg.sprite.Group()
         self.foods = pg.sprite.Group()
-        self.spritesheet = Spritesheet("../assets/one/player1.png")
+        self.spritesheet = Spritesheet("../assets/one/player{}.png".format(self.game.suit))
         #ADD PLAYER
         self.player = Player(self)
         self.players.add(self.player)
         #ADD PLATFORMS
-        base = Platform(0, FLOOR , 3*WIDTH, HEIGHT - FLOOR)
-        pt = Platform(200 , FLOOR - 25 , 100 , 20)
-        p1 = Platform(750 , FLOOR - 100 , 100 , 20)
-        p2 = Platform(1135.5 , FLOOR - 100 , 100 , 20)
-        p3 = Platform(1411 , FLOOR - 200 , 50 , 20)
-        p4 = Platform(1636.5 , FLOOR - 100 , 100 , 20)
-        p5 = Platform(2350 , FLOOR - 100 , 100 , 20)
-        p6 = Platform(3055.5 , FLOOR - 100 , 100 , 20)
-        p7 = Platform(3331 , FLOOR - 200 , 50 , 20)
-        p8 = Platform(3556.5 , FLOOR - 100 , 100 , 20)
+        base = Platform(0, FLOOR , 3*WIDTH, HEIGHT - FLOOR,"")
+        base.image.set_alpha(0) 
+        pt = Platform(200 , FLOOR - 25 , 100 , 20,"1")
+        p1 = Platform(750 , FLOOR - 100 , 100 , 20,"1")
+        p2 = Platform(1135.5 , FLOOR - 100 , 100 , 20,"1")
+        p3 = Platform(1411 , FLOOR - 200 , 50 , 20,"2")
+        p4 = Platform(1636.5 , FLOOR - 100 , 100 , 20,"1")
+        p5 = Platform(2350 , FLOOR - 100 , 100 , 20,"1")
+        p6 = Platform(3055.5 , FLOOR - 100 , 100 , 20,"1")
+        p7 = Platform(3331 , FLOOR - 200 , 50 , 20,"2")
+        p8 = Platform(3556.5 , FLOOR - 100 , 100 , 20,"1")
         self.bases.add(base)
         self.platforms.add(pt)
         self.platforms.add(p1)
@@ -481,8 +485,12 @@ class NivelOne():
         rel_x = round(self.stagePosX % self.bgWidth,0)
         self.win.blit(self.bg.currentImage,
                             (rel_x - self.bgWidth, 0))
+        self.win.blit(self.floor.currentImage,
+                            (rel_x - self.bgWidth, FLOOR))
+        
         if rel_x < WIDTH:
             self.win.blit(self.bg.currentImage, (rel_x, 0))
+            self.win.blit(self.floor.currentImage, (rel_x, FLOOR))
         if self.player.rect.center[0] == self.startScrollingPosX:
             self.platforms.update(self.player.des)
             self.lifes.update(self.player.des)

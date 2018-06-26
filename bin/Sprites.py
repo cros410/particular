@@ -17,8 +17,6 @@ class Player(pg.sprite.Sprite):
     def __init__(self, stage):
         pg.sprite.Sprite.__init__(self)
         self.stage = stage
-        # self.image = pg.Surface((50, 50))
-        # self.image.set_colorkey(BLACK)
         # self.image.fill(self.__getSuit())
         self.walking = False
         self.jumping = False
@@ -26,7 +24,6 @@ class Player(pg.sprite.Sprite):
         self.last_update = 0
         self.load_images()
         self.image = self.standing_frames[0]
-        #self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
         self.rect.center = (25, 300)
         self.pos = vec(48.5, 300) #POSITION IN ALL STAGE 
@@ -61,7 +58,7 @@ class Player(pg.sprite.Sprite):
             frame.set_colorkey(BLACK)
 
         self.jump_frames_l = []
-        for frame in jump_frames_r:
+        for frame in self.jump_frames_r:
             self.jump_frames_l.append(pg.transform.flip(frame,True, False))
         for frame in self.jump_frames_l:
             frame.set_colorkey(BLACK)
@@ -127,12 +124,12 @@ class Player(pg.sprite.Sprite):
         if self.jumping:
             if now - self.last_update > 50:
                 self.last_update = now
-                self.current_frame = (self.current_frame + 1) % len(self.jump_frames)
+                self.current_frame = (self.current_frame + 1) % len(self.jump_frames_r)
                 bottom = self.rect.bottom
-                if self.vel.x  > 0:
-                    self.image = self.jump_frames_r[self.current_frame]
-                else:
+                if self.vel.x  < 0:
                     self.image = self.jump_frames_l[self.current_frame]
+                else:
+                    self.image = self.jump_frames_r[self.current_frame]
                 self.rect = self.image.get_rect()
                 self.rect.bottom = bottom
 
@@ -173,10 +170,13 @@ class Player(pg.sprite.Sprite):
 
 class Platform(pg.sprite.Sprite):
 
-    def __init__(self, x, y, w, h):
+    def __init__(self, x, y, w, h, type):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.Surface((w, h))
-        self.image.fill(PURPLE)
+        if type == "":
+            self.image = pg.Surface((w, h))
+            self.image.fill(PURPLE)
+        else:
+            self.image = pg.image.load("../assets/one/platform{}.png".format(type))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
