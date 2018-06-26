@@ -338,9 +338,9 @@ class NivelOne():
         self.marco_pause = Component(win , pg.image.load(
             "../assets/pause/pause_marco.png") , None ,280 , 160 , 0)
         self.play = Component(win, pg.image.load("../assets/pause/btn_play.png"),
-                              pg.image.load("../assets/pause/btn_alt_play.png"), 325.3, 340, 1)
+                              pg.image.load("../assets/pause/btn_alt_play.png"), 325.3, 250, 1)
         self.exit = Component(win, pg.image.load("../assets/pause/btn_exit.png"),
-                              pg.image.load("../assets/pause/btn_alt_exit.png"), 502.6, 340, 1)
+                              pg.image.load("../assets/pause/btn_alt_exit.png"), 502.6, 250, 1)
         
         #LOAD COMPONENTS LOSE
         self.marco_lose = Component(win , pg.image.load(
