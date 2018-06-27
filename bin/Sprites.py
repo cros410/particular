@@ -17,7 +17,6 @@ class Player(pg.sprite.Sprite):
     def __init__(self, stage):
         pg.sprite.Sprite.__init__(self)
         self.stage = stage
-        # self.image.fill(self.__getSuit())
         self.walking = False
         self.jumping = False
         self.current_frame = 0
@@ -151,14 +150,6 @@ class Player(pg.sprite.Sprite):
         if hits or hits_floor:
             self.vel.y = -10      
 
-    def __getSuit(self):
-        switcher = {
-            1 : GREEN,
-            2 : BLUE,
-            3 : ORANGE
-        }
-        return switcher.get(self.stage.game.suit)
-
     def __getAcceleration(self):
         switcher = {
             1 : PLAYER_ACC_1,
@@ -166,7 +157,6 @@ class Player(pg.sprite.Sprite):
             3 : PLAYER_ACC_3
         }
         return switcher.get(self.stage.game.difficulty)
-
 
 class Platform(pg.sprite.Sprite):
 
