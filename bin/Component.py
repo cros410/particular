@@ -6,6 +6,7 @@ class Component():
         self.win = win
         self.currentImage = image
         self.imagePrincipal = image
+        self.rect = self.currentImage.get_rect()
         self.alternative = alternative
         self.x = x
         self.y = y
@@ -39,7 +40,7 @@ class Component():
         pass
 
     def inside(self,pos_x,pos_y):
-        if((self.x + 132) > pos_x > self.x and (self.y + 60) > pos_y > self.y):
+        if( (self.x + self.rect.right) > pos_x > self.x and (self.y + self.rect.bottom) > pos_y > self.y):
             return True
         return False
     
