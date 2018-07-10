@@ -14,7 +14,7 @@ class Spritesheet:
 
 class Player(pg.sprite.Sprite):
 
-    def __init__(self, stage):
+    def __init__(self, stage, type = 0):
         pg.sprite.Sprite.__init__(self)
         self.stage = stage
         self.walking = False
@@ -32,6 +32,7 @@ class Player(pg.sprite.Sprite):
         self.acc = vec(0, 0)
         self.des = 0
         self.side = 0
+        self.type = type
 
     def load_images(self):
         self.standing_frames_r = [self.stage.spritesheet.get_image(20, 10, 48 , 56),self.stage.spritesheet.get_image(117, 10, 48 , 56),
@@ -175,9 +176,13 @@ class Player(pg.sprite.Sprite):
         return switcher.get(self.stage.game.difficulty)
 
     def shoot(self):
-        if self.side != 0:
-            bullet = Bullet(self.rect.x + 48, self.rect.center[1], self.side)
-            self.stage.bullets.add(bullet)
+        if self.type == 0:
+            if self.side != 0:
+                bullet = Bullet(self.rect.x + 48, self.rect.center[1], self.side)
+                self.stage.bullets.add(bullet)
+        else:
+            weapon = Weapon(self.rect.center[0],self.rect.center[1],self.type)
+            self.stage.bullets.add(weapon)
 
 class Platform(pg.sprite.Sprite):
 
@@ -309,6 +314,19 @@ class Bullet(pg.sprite.Sprite):
 
         self.rect.x += (self.speed)*self.side
         if self.rect.x > WIDTH:
+            self.kill()
+
+class Weapon(pg.sprite.Sprite):
+    def __init__(self, x,y,type):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.image.load("../assets/three/p_{}.png".format(type))
+        self.rect = self.image.get_rect()
+        self.rect.center = (x,y)
+        self.speed = 10
+
+    def update(self):
+        self.rect.y -= self.speed
+        if self.rect.y < 0:
             self.kill()
 
 class Monster(pg.sprite.Sprite):

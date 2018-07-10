@@ -1065,8 +1065,10 @@ class NivelCreate():
         self.arrayComponente = []
         self.arrayBackground = []
         self.arrayEnemy = []
+        self.arrayWeapon = []
         self.background = 1
         self.enemy = 1
+        self.weapon = 1
         self.f_1 = Component(win, pg.image.load("../assets/create/f_1.png"),
                                 pg.image.load("../assets/create/f_s_1.png"), 330, 10, 1)
         self.f_2 = Component(win, pg.image.load("../assets/create/f_2.png"),
@@ -1077,11 +1079,17 @@ class NivelCreate():
                                       pg.image.load("../assets/create/e_s_1.png"), 400, 220, 1)
         self.e_2 = Component(win, pg.image.load("../assets/create/e_2.png"),
                                       pg.image.load("../assets/create/e_s_2.png"), 680, 220, 1)
+        self.w_1 = Component(win, pg.image.load("../assets/create/p_1.png"),
+                                pg.image.load("../assets/create/p_s_1.png"), 410, 430, 1)
+        self.w_2 = Component(win, pg.image.load("../assets/create/p_2.png"),
+                                pg.image.load("../assets/create/p_s_2.png"), 620, 430, 1)
+        self.w_3 = Component(win, pg.image.load("../assets/create/p_3.png"),
+                                pg.image.load("../assets/create/p_s_3.png"), 830, 430, 1)
         self.back = Component(win, pg.image.load(
             "../assets/options/back.png"), None, 10, 10, 0)
 
         self.run = Component(win, pg.image.load(
-            "../assets/create/run.png"), None, 860, 540, 0)
+            "../assets/create/run.png"), None, 880, 540, 0)
 
         self.__loadComponents(win)
         self.__init_componets()
@@ -1112,6 +1120,10 @@ class NivelCreate():
                     if e.inside(mouse[0], mouse[1]):
                         self.game.click_sound()
                         self.__active_group(self.arrayEnemy, e, "ENEMY")
+                for w in self.arrayWeapon:
+                    if w.inside(mouse[0], mouse[1]):
+                        self.game.click_sound()
+                        self.__active_group(self.arrayWeapon, w, "WEAPON")
 
     def update(self):
         pass
@@ -1123,7 +1135,7 @@ class NivelCreate():
         self.game.changeState(SelectLevel(self.game, self.win))
 
     def goNivelThree(self):
-        self.game.changeState(NivelThree(self.game, self.win, self.background, self.enemy))
+        self.game.changeState(NivelThree(self.game, self.win, self.background, self.enemy, self.weapon))
 
     def __loadComponents(self, win):
         self.arrayComponente.append(
@@ -1139,13 +1151,17 @@ class NivelCreate():
         self.arrayEnemy.append(self.e_1)
         self.arrayEnemy.append(self.e_2)
         self.arrayComponente = self.arrayComponente + self.arrayEnemy
-
+        self.arrayWeapon.append(self.w_1)
+        self.arrayWeapon.append(self.w_2)
+        self.arrayWeapon.append(self.w_3)
+        self.arrayComponente = self.arrayComponente + self.arrayWeapon
         self.arrayComponente.append(self.back)
         self.arrayComponente.append(self.run)
 
     def __init_componets(self):
         self.arrayBackground[0].active(True)
         self.arrayEnemy[0].active(True)
+        self.arrayWeapon[0].active(True)
 
     def __active_group(self, group, element, type):
         element.active(True)
@@ -1154,12 +1170,14 @@ class NivelCreate():
             self.background = index + 1
         if type == "ENEMY":
             self.enemy = index + 1
+        if type == "WEAPON":
+            self.weapon = index + 1
         for component in group:
             if group.index(component) != index:
                 component.active(False)
 
 class NivelThree():
-    def __init__(self, game, win, background, enemy):
+    def __init__(self, game, win, background, enemy , weapon):
         self.game = game
         self.win = win
         self.arrayComponente = []
@@ -1177,10 +1195,11 @@ class NivelThree():
         # CONJUNTO DE IMAGENES
         self.players = pg.sprite.Group()
         self.monsters = pg.sprite.Group()
+        self.bullets = pg.sprite.Group()
         self.spritesheet = Spritesheet("../assets/one/player{}.png".format(self.game.suit))
         self.spritesheet_enemy = Spritesheet("../assets/three/enemy{}.png".format(enemy))
         #ADD PLAYER
-        self.player = Player(self)
+        self.player = Player(self,weapon)
         self.players.add(self.player)
         #ADD MONSTERS
         self.monster1 = Monster(self,100,100,enemy,1)
@@ -1231,6 +1250,7 @@ class NivelThree():
     def draw(self):
         self.players.draw(self.win)
         self.monsters.draw(self.win)
+        self.bullets.draw(self.win)
         for component in self.arrayComponents:
             component.draw()
         if  self.pauseState:
@@ -1268,8 +1288,8 @@ class NivelThree():
                 if event.type == pg.KEYDOWN:
                     if  event.key == pg.K_SPACE:
                         self.player.jump(3)
-                    # if event.key == pg.K_SPACE:
-                    #     self.player.shoot()
+                    if event.key == pg.K_TAB:
+                        self.player.shoot()
                 if event.type == pg.MOUSEBUTTONDOWN:
                     if self.pause.inside(mouse[0], mouse[1]):
                         self.goPause(True)
@@ -1303,6 +1323,7 @@ class NivelThree():
             self.move_screen(move)
 
     def update(self):
+        self.bullets.update()
         if not self.pauseState and not self.loseState and not self.winState:
             self.monsters.update()
 
