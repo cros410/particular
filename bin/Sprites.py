@@ -23,6 +23,7 @@ class Player(pg.sprite.Sprite):
         self.last_update = 0
         self.load_images()
         self.image = self.standing_frames_r[0]
+        self.mask = pg.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.center = (25, 300)
         self.pos = vec(48.5, 300) #POSITION IN ALL STAGE 
@@ -40,6 +41,7 @@ class Player(pg.sprite.Sprite):
                                 self.stage.spritesheet.get_image(408, 10, 48 , 56),self.stage.spritesheet.get_image(505, 10, 48 , 56)]
         for frame in self.standing_frames_r:
             frame.set_colorkey(BLACK)
+            pass
         
         self.standing_frames_l = []
         for frame in self.standing_frames_r:
@@ -165,7 +167,7 @@ class Player(pg.sprite.Sprite):
                 self.vel.y = -10
         else:
             self.rect.x -= 1
-            self.vel.y = -10
+            self.vel.y = -8
         
     def __getAcceleration(self):
         switcher = {
@@ -337,6 +339,7 @@ class Monster(pg.sprite.Sprite):
         self.last_update = 0
         self.load_images(type)
         self.image = self.fly_frames_r[0]
+        self.mask = pg.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.x = x 
         self.rect.y = y
@@ -348,13 +351,15 @@ class Monster(pg.sprite.Sprite):
                                 self.stage.spritesheet_enemy.get_image(0, 65, 98 , 65)]
         for frame in self.fly_frames_r:
             frame.set_colorkey(BLACK)
-        
+            self.mask = pg.mask.from_surface(frame)
+
         self.fly_frames_l = []
         for frame in self.fly_frames_r:
             self.fly_frames_l.append(pg.transform.flip(frame,True, False))
         
         for frame in self.fly_frames_l:
             frame.set_colorkey(BLACK)
+            self.mask = pg.mask.from_surface(frame)
 
     def animate(self,side):
         now = pg.time.get_ticks()
@@ -367,7 +372,7 @@ class Monster(pg.sprite.Sprite):
                 self.image = self.fly_frames_l[self.current_frame]
     
     def update(self):
-        if self.rect.x > self.stage.stageWidth or self.rect.x < 0:
+        if self.rect.x > self.stage.stageWidth or self.rect.x < -150:
             self.kill()
-        self.animate(1)
-        self.rect.x += self.side * 5
+        self.animate(self.side)
+        self.rect.x += self.side * 3

@@ -6,6 +6,7 @@ from db.database import Database
 from Sprites import *
 import requests as requests
 import json
+from random import randint
 
 
 class MenuStage():
@@ -1192,6 +1193,8 @@ class NivelThree():
         self.loseState = False
         self.winState = False
         self.name = ""
+        self.last_update = 0
+        self.points = 0
         # CONJUNTO DE IMAGENES
         self.players = pg.sprite.Group()
         self.monsters = pg.sprite.Group()
@@ -1202,7 +1205,8 @@ class NivelThree():
         self.player = Player(self,weapon)
         self.players.add(self.player)
         #ADD MONSTERS
-        self.monster1 = Monster(self,100,100,enemy,1)
+        self.enemy = enemy
+        self.monster1 = Monster(self,400,100,self.enemy,-1)
         self.monsters.add(self.monster1)
         #LETRA
         self.myfont = pg.font.SysFont("monospace", 20, True)
@@ -1323,7 +1327,30 @@ class NivelThree():
             self.move_screen(move)
 
     def update(self):
+        now = pg.time.get_ticks()
+        if now - self.last_update > 1500:
+            self.last_update = now
+            height = randint(30, 600)
+            rand = randint(0, 1)
+            side = 1 if rand == 0 else -1
+            begin = -100 if rand == 0 else self.stageWidth
+            monster = Monster(self,begin,height,self.enemy,side)
+            self.monsters.add(monster)
+
         self.bullets.update()
+
+        #CHECK HIT TO ENMY
+        hits_monsters = pg.sprite.spritecollide(self.player, self.monsters , False, pg.sprite.collide_mask)
+        if hits_monsters:
+            self.loseState = True
+
+        #CHECK IF BULLET TO MONSTERS
+        for bullet in self.bullets:
+            hits_bullet =  pg.sprite.spritecollide(bullet, self.monsters , True)
+            if hits_bullet:
+                self.points += 20
+                bullet.kill()
+
         if not self.pauseState and not self.loseState and not self.winState:
             self.monsters.update()
 
