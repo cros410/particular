@@ -291,6 +291,7 @@ class NivelOne():
         self.tumis = pg.sprite.Group()
         self.foods = pg.sprite.Group()
         self.bullets = pg.sprite.Group()
+        self.bullets_enemy = pg.sprite.Group()
         self.spritesheet = Spritesheet("../assets/one/player{}.png".format(self.game.suit))
         self.spritesheet_enemy = Spritesheet("../assets/one/enemy.png")
         #ADD PLAYER
@@ -400,6 +401,7 @@ class NivelOne():
         self.tumis.draw(self.win)
         self.foods.draw(self.win)
         self.bullets.draw(self.win)
+        self.bullets_enemy.draw(self.win)
         self.flags.draw(self.win)
         #RENDER POINTS
         label = self.myfont.render("PUNTAJE : {}".format(self.poits), 1, BLACK)
@@ -482,7 +484,7 @@ class NivelOne():
                         self.goMenu()
             if self.winState:
                 if event.type == pg.MOUSEBUTTONDOWN:
-                    if self.exit_lose.inside(mouse[0], mouse[1]):
+                    if self.continue_win.inside(mouse[0], mouse[1]):
                         self.goMenu()
                         
 
@@ -491,7 +493,9 @@ class NivelOne():
             self.move_screen(move)
 
     def update(self):
-        self.bullets.update()
+        if not self.pauseState and  not self.loseState and not self.winState:
+            self.bullets.update()
+            self.bullets_enemy.update()
         for enemy in self.enemys:
             enemy.animate()
         self.player.jumping = True
@@ -534,12 +538,21 @@ class NivelOne():
         if hits_enemy:
             self.loseState = True
         
+        #CHECK HIT TO ENMY BULLET
+        hits_enemy = pg.sprite.spritecollide(self.player, self.bullets_enemy , False)
+        if hits_enemy:
+            self.loseState = True
+        
         #CHECK IF BULLET TO ENEMY
         for bullet in self.bullets:
             hits_bullet =  pg.sprite.spritecollide(bullet, self.enemys , True)
+            hits_b_b = pg.sprite.spritecollide(bullet, self.bullets_enemy , True)
             if hits_bullet:
-                self.poits += 20
                 bullet.kill()
+                self.poits += 30
+            if hits_b_b:
+                bullet.kill()
+        
         #CHECK IF WIIN
         hits_flag = pg.sprite.spritecollide(self.player, self.flags , False)
         if hits_flag:
@@ -755,6 +768,7 @@ class NivelTwo():
         self.tumis = pg.sprite.Group()
         self.foods = pg.sprite.Group()
         self.bullets = pg.sprite.Group()
+        self.bullets_enemy = pg.sprite.Group()
         self.spritesheet = Spritesheet("../assets/two/player{}.png".format(self.game.suit))
         self.spritesheet_enemy = Spritesheet("../assets/two/enemy2.png")
         #ADD PLAYER
@@ -768,7 +782,6 @@ class NivelTwo():
         #ADD PLATFORMS
         base = Platform(0, FLOOR , 3*WIDTH, HEIGHT - FLOOR,"")
         base.image.set_alpha(0) 
-        pt = Platform(200 , FLOOR - 25 , 100 , 20,"1")
         p1 = Platform(750 , FLOOR - 100 , 100 , 20,"1")
         p2 = Platform(1135.5 , FLOOR - 100 , 100 , 20,"1")
         p3 = Platform(1411 , FLOOR - 200 , 50 , 20,"2")
@@ -778,7 +791,6 @@ class NivelTwo():
         p7 = Platform(3331 , FLOOR - 200 , 50 , 20,"2")
         p8 = Platform(3556.5 , FLOOR - 100 , 100 , 20,"1")
         self.bases.add(base)
-        self.platforms.add(pt)
         self.platforms.add(p1)
         self.platforms.add(p2)
         self.platforms.add(p3)
@@ -864,6 +876,7 @@ class NivelTwo():
         self.tumis.draw(self.win)
         self.foods.draw(self.win)
         self.bullets.draw(self.win)
+        self.bullets_enemy.draw(self.win)
         self.flags.draw(self.win)
         #RENDER POINTS
         label = self.myfont.render("PUNTAJE : {}".format(self.poits), 1, BLACK)
@@ -946,7 +959,7 @@ class NivelTwo():
                         self.goMenu()
             if self.winState:
                 if event.type == pg.MOUSEBUTTONDOWN:
-                    if self.exit_lose.inside(mouse[0], mouse[1]):
+                    if self.continue_win.inside(mouse[0], mouse[1]):
                         self.goMenu()
                         
 
@@ -955,7 +968,9 @@ class NivelTwo():
             self.move_screen(move)
 
     def update(self):
-        self.bullets.update()
+        if not self.pauseState and  not self.loseState and not self.winState:
+            self.bullets.update()
+            self.bullets_enemy.update()
         for enemy in self.enemys:
             enemy.animate()
         self.player.jumping = True
@@ -998,12 +1013,21 @@ class NivelTwo():
         if hits_enemy:
             self.loseState = True
         
+        #CHECK HIT TO ENMY BULLET
+        hits_enemy = pg.sprite.spritecollide(self.player, self.bullets_enemy , False)
+        if hits_enemy:
+            self.loseState = True
+        
         #CHECK IF BULLET TO ENEMY
         for bullet in self.bullets:
             hits_bullet =  pg.sprite.spritecollide(bullet, self.enemys , True)
+            hits_b_b = pg.sprite.spritecollide(bullet, self.bullets_enemy , True)
             if hits_bullet:
-                self.poits += 20
                 bullet.kill()
+                self.poits += 30
+            if hits_b_b:
+                bullet.kill()
+        
         #CHECK IF WIIN
         hits_flag = pg.sprite.spritecollide(self.player, self.flags , False)
         if hits_flag:
@@ -1255,6 +1279,9 @@ class NivelThree():
         self.players.draw(self.win)
         self.monsters.draw(self.win)
         self.bullets.draw(self.win)
+        #RENDER POINTS
+        label = self.myfont.render("PUNTAJE : {}".format(self.points), 1, BLACK)
+        self.win.blit(label, (5, 0))
         for component in self.arrayComponents:
             component.draw()
         if  self.pauseState:
@@ -1313,7 +1340,7 @@ class NivelThree():
                         self.name = ""
                 if event.type == pg.MOUSEBUTTONDOWN:
                     if self.save.inside(mouse[0], mouse[1]):
-                        pass
+                        self.save_score()
                     if self.exit_lose.inside(mouse[0], mouse[1]):
                         self.goMenu()
             if self.winState:
@@ -1348,7 +1375,7 @@ class NivelThree():
         for bullet in self.bullets:
             hits_bullet =  pg.sprite.spritecollide(bullet, self.monsters , True)
             if hits_bullet:
-                self.points += 20
+                self.points += 30
                 bullet.kill()
 
         if not self.pauseState and not self.loseState and not self.winState:
@@ -1382,5 +1409,12 @@ class NivelThree():
         
         if rel_x < WIDTH:
             self.win.blit(self.bg.currentImage, (rel_x, 0))
+
+    def save_score(self):
+        payload = {"nombre" : self.name , "puntaje" : self.points}
+        r = requests.post(URL_API + "/ranking", data=payload)
+        print("Status : {}".format(r.status_code))
+        self.goMenu()
+
 
     

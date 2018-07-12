@@ -257,6 +257,9 @@ class Enemy(pg.sprite.Sprite):
         self.stage = stage
         self.current_frame = 0
         self.last_update = 0
+        self.last_shoot = 0
+        self.last_move = 0
+        self.move = 1
         self.load_images(type)
         self.image = self.standing_frames[0]
         self.rect = self.image.get_rect()
@@ -284,14 +287,25 @@ class Enemy(pg.sprite.Sprite):
             frame.set_colorkey(BLACK)
 
     def animate(self):
+        now_m = pg.time.get_ticks()
+        if now_m - self.last_move > 1000:
+            self.move = self.move*-1
+            self.last_move = now_m
+        if self.rect.x > 0 and self.rect.x < WIDTH:
+                if not self.stage.pauseState and  not self.stage.loseState and not self.stage.winState:
+                    self.rect.x -= self.move*3
         now = pg.time.get_ticks()
         if now - self.last_update > 200:
             self.last_update = now
             self.current_frame = (self.current_frame + 1) % len(self.standing_frames)
-            # bottom = self.rect.bottom
             self.image = self.standing_frames[self.current_frame]
-            # self.rect = self.image.get_rect()
-            # self.rect.bottom = bottom
+
+        now_b = pg.time.get_ticks()
+        if now_b - self.last_shoot > 3000:
+            self.last_shoot = now_b
+            if self.rect.x > 0 and self.rect.x < WIDTH:
+                bullet = BulletEnemy(self.rect.x, self.rect.center[1])
+                self.stage.bullets_enemy.add(bullet)
     
     def update(self , dis):
         self.rect.x -= dis
@@ -316,6 +330,19 @@ class Bullet(pg.sprite.Sprite):
 
         self.rect.x += (self.speed)*self.side
         if self.rect.x > WIDTH:
+            self.kill()
+
+class BulletEnemy(pg.sprite.Sprite):
+    def __init__(self, x,y):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.image.load("../assets/one/bullet_enemy.png")
+        self.rect = self.image.get_rect()
+        self.rect.center = (x,y)
+        self.speed = 10
+    
+    def update(self):
+        self.rect.x -= self.speed
+        if self.rect.x < 0:
             self.kill()
 
 class Weapon(pg.sprite.Sprite):
