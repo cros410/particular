@@ -8,4 +8,4 @@ pygame==1.9.3
 query-string==1.0.2
 request==1.0.2
 requests==2.19.0
-urllib3==1.23
+urllib3==1.26.5
